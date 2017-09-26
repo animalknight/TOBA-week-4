@@ -14,9 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import JaveBeans.User;
+import JaveBeans.UserDB;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpSession;
+
+import java.sql.*;
 /**
  *
  * @author David K
@@ -93,6 +98,28 @@ public class NewCustomerServlet extends HttpServlet {
             
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
+            
+                try {
+                    Class.forName("com.mysql.jdbc.Driver");
+                    
+                    String sqlStatement = request.getParameter("sqlStatement");
+                    String sqlResult = "";
+                    String database = "jdbc:mysql://localhost:3306/Program Files";
+                    String username = "root";
+                    String password = "sesame";
+                    
+                    Connection connection = DriverManager.getConnection(database, username, password);
+                    
+                    Statement statement = connection.createStatement();
+                    
+                    ResultSet resultset = statement.executeQuery(sqlStatement);
+                    sqlResult = UserDB.getHtmlTable(resultset);
+                    
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(NewCustomerServlet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewCustomerServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
             
             url = "/Success.html";
             getServletContext()

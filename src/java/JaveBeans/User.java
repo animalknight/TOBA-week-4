@@ -36,7 +36,7 @@ public class User implements Serializable{
     public void setLastName(String lastName){
         this.lastName = lastName;
     }
-    public String setLastName(){
+    public String getLastName(){
         return lastName;
     }
     public void setCity(String city){

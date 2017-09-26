@@ -29,5 +29,4 @@
             
             <input type="submit" value="Sign Up" id="submit">
         </form>
-    </body>
-</html>
+    <%@include file="/head and foot/footer.jsp" %>
