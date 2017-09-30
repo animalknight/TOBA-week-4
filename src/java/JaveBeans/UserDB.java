@@ -5,38 +5,41 @@
  */
 package JaveBeans;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 
 public class UserDB {
-    
-    public static int insert(User user) {
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    public static User selectUser(String email) {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT u FROM User u " +
+        "WHERE u.email = :email";
+        TypedQuery<User> q = em.createQuery(qString, User.class);
+        q.setParameter("email", email);
         
-        String query = "INSERT INTO User(Email, FirstName, LastName) "
-                + "VALUES (?, ?, ?)";
-        
-        try {
-            ps = connection.prepareStatement(query);
-            ps.setString(1, user.getEmail());
-            ps.setString(2, user.getFirstName());
-            ps.setString(3, user.getLastName());
-            return ps.executeUpdate();
-        } catch (SQLException e) {
+        User user = null;
+        try{
+            user = q.getSingleResult();
+        } catch (NoResultException e) {
             System.out.println(e);
-            return 0;
         } finally {
-            DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
+            em.close();
         }
+        return user;
     }
-
-    public static String getHtmlTable(ResultSet resultset) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public static void insert(User user) {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        trans.begin();
+        try {
+            em.persist(user);
+            trans.commit();
+        } catch (Exception e) {
+            System.out.println(e);
+            trans.rollback();
+        } finally {
+            em.close();
+        }
     }
 }

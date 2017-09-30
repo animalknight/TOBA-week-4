@@ -6,12 +6,19 @@
 package JaveBeans;
 
 import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  *
  * @author David K
  */
+@Entity
 public class User implements Serializable{
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String firstName, lastName, city, address, state, email, userName, password, zipCode, phoneNumber;
     
     public User(){
