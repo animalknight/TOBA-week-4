@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/TOBA_retry">
 <Resource name="jdbc/TOBA" auth="Container" driverClassName="com.mysql.jdbc.Driver"
-url="jdbc:mysql://localhost3306/TOBA" name="jdbc/user" password="sesame"
+url="jdbc:mysql://localhost:3306/TOBA" name="jdbc/user" password="sesame"
 maxActive="100" maxIdle="30" maxWait="10000" logAbandoned="true" removeAbandoned="true"
 removeAbandonedTimeout="60" type="javax.sql.DataSource" username="root" />
+
+<Realm className="org.apache.catalina.realm.DataSourceRealm" debug="99"
+    dataSourceName="jdbc/TOBA" localDataSource="true" userTable="UserPass"
+    userNameCol="Username" userCredCol="Password" userRoleTable="UserRole"
+    roleNameCol="Rolename" />
 </Context>
